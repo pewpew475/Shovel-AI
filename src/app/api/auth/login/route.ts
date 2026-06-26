@@ -4,7 +4,11 @@ import { verifyPassword, createSessionToken, COOKIE_NAME } from '@/lib/auth';
 export async function POST(req: NextRequest) {
   const host = req.headers.get('host') ?? '';
   const origin = req.headers.get('origin') ?? '';
-  if (!origin.includes(host.split(':')[0])) {
+  try {
+    const originHost = new URL(origin).hostname;
+    const requestHost = host.split(':')[0];
+    if (originHost !== requestHost) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  } catch {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -21,6 +25,7 @@ export async function POST(req: NextRequest) {
   res.cookies.set(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: 60 * 60 * 24,
   });

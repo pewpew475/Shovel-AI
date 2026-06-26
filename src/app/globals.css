@@ -3,33 +3,69 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  --radius: 0.5rem;
+  --surface: #f0f4f8;
+  --card: #ffffff;
+  --sky: #7EC8E3;
+  --sky-light: #B8E4F2;
+  --gray-text: #8899aa;
+  --dark: #0d1117;
+  --shadow-dark: #c8d0e7;
+  --shadow-light: #ffffff;
 }
 
-* {
-  border-color: hsl(var(--border));
+@layer base {
+  body { background: var(--surface); color: var(--dark); }
 }
 
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+@layer components {
+  /* Neomorphism — extruded from surface */
+  .neo-card {
+    @apply bg-white rounded-3xl;
+    box-shadow: 8px 8px 20px var(--shadow-dark), -8px -8px 20px var(--shadow-light);
+  }
+  .neo-input {
+    background: var(--surface);
+    border-radius: 14px;
+    box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+  }
+  .neo-inset {
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+  }
+
+  /* Claymorphism — inflated, soft, tactile */
+  .clay-bubble {
+    @apply bg-white rounded-3xl;
+    border: 1.5px solid rgba(184, 228, 242, 0.45);
+    box-shadow: 0 8px 28px rgba(126, 200, 227, 0.18), 0 2px 8px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .clay-btn-primary {
+    background: linear-gradient(145deg, #7EC8E3, #5ab5d4);
+    @apply rounded-2xl cursor-pointer transition-all duration-200;
+    box-shadow: 0 6px 20px rgba(126, 200, 227, 0.45), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .clay-btn-primary:hover {
+    box-shadow: 0 8px 28px rgba(126, 200, 227, 0.6), inset 0 1px 0 rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+  }
+  .clay-btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    transform: none;
+  }
+  .clay-btn-secondary {
+    @apply bg-white rounded-2xl cursor-pointer transition-all duration-200 text-dark;
+    border: 1.5px solid rgba(184, 228, 242, 0.6);
+    box-shadow: 0 4px 16px rgba(126, 200, 227, 0.15), 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .clay-btn-secondary:hover {
+    box-shadow: 0 6px 20px rgba(126, 200, 227, 0.25);
+    transform: translateY(-1px);
+  }
+
+  /* Shared */
+  .bg-surface { background: var(--surface); }
+  .text-dark { color: var(--dark); }
+  .text-gray-text { color: var(--gray-text); }
+  .text-sky { color: var(--sky); }
 }

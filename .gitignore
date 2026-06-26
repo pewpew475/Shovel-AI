@@ -40,3 +40,8 @@ next-env.d.ts
 # temp / scratchpad
 .remember/tmp/
 .remember/logs/
+
+# Shovel database files
+shovel.db
+shovel.db-shm
+shovel.db-wal

@@ -3,18 +3,21 @@ import { getDb } from '@/lib/db';
 import type { JobRow } from '@/lib/db';
 import type { ParsedIntent } from '@/lib/ai/intent-parser';
 
+const ALLOWED_COLUMNS = new Set([
+  'status', 'records_found', 'records_valid', 'duplicates_skipped', 'log', 'error'
+]);
+
 async function executeJob(jobId: string, job: JobRow): Promise<void> {
   const db = getDb();
   const intent = JSON.parse(job.parsed_intent!) as ParsedIntent;
 
-  function patch(data: Record<string, string | number | null>): void {
+  function patch(data: Record<string, unknown>): void {
     const keys = Object.keys(data);
-    const values = Object.values(data);
+    const invalid = keys.filter(k => !ALLOWED_COLUMNS.has(k));
+    if (invalid.length > 0) throw new Error(`patch: disallowed columns: ${invalid.join(', ')}`);
     db.prepare(
-      'UPDATE jobs SET updated_at=?, ' +
-        keys.map(k => `${k}=?`).join(', ') +
-        ' WHERE id=?'
-    ).run(new Date().toISOString(), ...values, jobId);
+      'UPDATE jobs SET updated_at=?, ' + keys.map(k => `${k}=?`).join(', ') + ' WHERE id=?'
+    ).run(new Date().toISOString(), ...Object.values(data), jobId);
   }
 
   function appendLog(msg: string): void {

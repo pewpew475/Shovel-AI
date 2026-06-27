@@ -18,6 +18,7 @@ describe('parseValidationResponse', () => {
   it('returns fallback on parse error', () => {
     const results = parseValidationResponse('bad json', 2);
     expect(results).toHaveLength(2);
-    expect(results[0].valid).toBe(true);
+    expect(results[0].valid).toBe(false);
+    expect(results[0].missingFields).toEqual(['validation_failed']);
   });
 });

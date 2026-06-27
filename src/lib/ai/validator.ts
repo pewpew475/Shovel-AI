@@ -33,8 +33,8 @@ export function parseValidationResponse(content: string, expectedCount: number):
     if (arr.length === expectedCount) return arr;
   } catch { /* fall through */ }
   return Array.from({ length: expectedCount }, () => ({
-    valid: true,
-    missingFields: [],
+    valid: false,
+    missingFields: ['validation_failed'],
     cleanedRecord: {},
   }));
 }

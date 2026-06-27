@@ -1,9 +1,5 @@
-import { ScraperDashboard } from '@/components/scraper-dashboard';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <ScraperDashboard />
-    </main>
-  );
+  redirect('/dashboard');
 }

@@ -19,36 +19,48 @@ export default function NewJobPage() {
 
   const handleParse = useCallback(async () => {
     if (!command.trim()) return;
-    setParsing(true); setError(''); setIntent(null);
-    const res = await fetch('/api/jobs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command, sourceType, sourceUrl: sourceUrl || undefined, parseOnly: true }),
-    });
-    setParsing(false);
-    if (res.ok) {
-      const data = await res.json() as { id?: string; intent: ParsedIntent };
-      setIntent(data.intent);
-      if (data.id) router.push(`/jobs/${data.id}`);
-    } else {
-      setError('Failed to parse intent. Check your NVIDIA API key.');
+    setParsing(true);
+    setError('');
+    setIntent(null);
+    try {
+      const res = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command, sourceType, sourceUrl: sourceUrl || undefined, parseOnly: true }),
+      });
+      if (res.ok) {
+        const data = await res.json() as { id?: string; intent: ParsedIntent };
+        setIntent(data.intent);
+      } else {
+        setError('Failed to parse intent. Check your NVIDIA API key.');
+      }
+    } catch {
+      setError('Network error. Please try again.');
+    } finally {
+      setParsing(false);
     }
-  }, [command, sourceType, sourceUrl, router]);
+  }, [command, sourceType, sourceUrl]);
 
   const handleCreate = useCallback(async () => {
     if (!command.trim()) return;
-    setCreating(true); setError('');
-    const res = await fetch('/api/jobs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command, sourceType, sourceUrl: sourceUrl || undefined }),
-    });
-    setCreating(false);
-    if (res.ok) {
-      const data = await res.json() as { id: string };
-      router.push(`/jobs/${data.id}`);
-    } else {
-      setError('Failed to create job.');
+    setCreating(true);
+    setError('');
+    try {
+      const res = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command, sourceType, sourceUrl: sourceUrl || undefined }),
+      });
+      if (res.ok) {
+        const data = await res.json() as { id: string };
+        router.push(`/jobs/${data.id}`);
+      } else {
+        setError('Failed to create job.');
+      }
+    } catch {
+      setError('Network error. Please try again.');
+    } finally {
+      setCreating(false);
     }
   }, [command, sourceType, sourceUrl, router]);
 
